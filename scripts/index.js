@@ -1,4 +1,3 @@
-const MODAL_ANIMATION_DURATION = 600;
 const cardTemplate = document.querySelector('#card-template').content;
 const placesList = document.querySelector('.places__list');
 
@@ -56,12 +55,13 @@ const cardPopup = document.querySelector('.popup_type_new-card');
 
 function openModal(popup) {
     popup.classList.add('popup_is-animated');
-    popup.style.visibility = 'visible'; 
-    popup.style.opacity = '0'; 
+    popup.style.visibility = 'visible';
+	popup.style.transitionDuration='.3s';
+    popup.style.opacity = '0';
 
     setTimeout(() => {
         popup.style.opacity = '1';
-    }, 0);
+    });
     popup.classList.add('popup_is-opened');
     
 }
@@ -73,7 +73,7 @@ function closeModal(popup) {
     setTimeout(() => {
         popup.style.visibility = 'hidden';
         popup.classList.remove('popup_is-animated');
-    }, MODAL_ANIMATION_DURATION);
+    }, 300);
 }
 
 const profileTitle = document.querySelector('.profile__title');
@@ -124,8 +124,21 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 const popupClose = imagePopup.querySelector('.popup__close');
+
 popupClose.addEventListener('click', () => {
     closeModal(imagePopup);
+});
+
+function closeByEsc(evt) {
+	if (evt.key === "Escape") {
+		const openedPopup = document.querySelector('.popup_is-opened');
+		if (openedPopup)
+			closeModal(openedPopup);
+	}
+}
+
+document.addEventListener('keydown', function(evt) {
+	closeByEsc(evt);
 });
 
 const profileEditButton = document.querySelector('.profile__edit-button');
@@ -141,6 +154,12 @@ closeButton.forEach(button => {
         const popup = event.target.closest('.popup');
         closeModal(popup);
     });
+	button.addEventListener('keypress', (ev) => {
+		if(ev.key === "Escape") {
+			const popup = event.target.closest('.popup');
+			closeModal(popup);
+		}
+	});
 });
 
 const profileAddButton = document.querySelector('.profile__add-button');
@@ -150,3 +169,4 @@ profileAddButton.addEventListener('click', () => {
 
 const profileFormElement = document.querySelector('.popup__form[name="edit-profile"]');
 profileFormElement.addEventListener('submit', handleProfileFormSubmit);
+
